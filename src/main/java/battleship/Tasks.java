@@ -87,6 +87,7 @@ public class Tasks {
 
                         if (game.getRemainingShips() == 0) {
                             game.over();
+                            PdfExporter.exportarHistorico(game.getAlienMoves());
                             System.exit(0);
                         }
                     }
@@ -106,6 +107,7 @@ public class Tasks {
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
+							PdfExporter.exportarHistorico(game.getAlienMoves());
 							System.exit(0);
 						}
 					}

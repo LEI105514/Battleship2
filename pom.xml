@@ -84,11 +84,17 @@
 			<version>3.2.4</version>
 		</dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.21.0</version>
-        </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.21.0</version>
+    </dependency>
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.8</version>
+			<scope>compile</scope>
+		</dependency>
 
 		<!-- JUnit Jupiter API -->
 		<dependency>
