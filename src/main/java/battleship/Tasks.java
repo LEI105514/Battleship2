@@ -1,5 +1,5 @@
 package battleship;
-
+import org.apache.commons.lang3.time.StopWatch;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
@@ -66,18 +66,31 @@ public class Tasks {
 					if (myFleet != null)
 						game.printMyBoard(false, true);
 					break;
-				case RAJADA:
-					if (game != null) {
-						game.readEnemyFire(in);
-						myFleet.printStatus();
-						game.printMyBoard(true, false);
+                case RAJADA:
+                    if (game != null) {
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							System.exit(0);
-						}
-					}
-					break;
+                        StopWatch stopWatch = StopWatch.createStarted();
+
+                        game.readEnemyFire(in);
+
+                        stopWatch.stop();
+
+                        double tempoSegundos = stopWatch.getTime() / 1000.0;
+
+                        System.out.printf(
+                                "Tempo gasto nesta jogada: %.2f segundos%n",
+                                tempoSegundos
+                        );
+
+                        myFleet.printStatus();
+                        game.printMyBoard(true, false);
+
+                        if (game.getRemainingShips() == 0) {
+                            game.over();
+                            System.exit(0);
+                        }
+                    }
+                    break;
 				case SIMULA:
 					if (game != null) {
 						while (game.getRemainingShips() > 0){
