@@ -145,6 +145,12 @@
 			<version>${allure.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.freva</groupId>
+			<artifactId>ascii-table</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+
 		<!-- Source: https://mvnrepository.com/artifact/org.jetbrains/annotations -->
 		<dependency>
 			<groupId>org.jetbrains</groupId>

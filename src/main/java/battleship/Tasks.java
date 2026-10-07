@@ -34,6 +34,7 @@ public class Tasks {
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
 	private static final String HISTORICO = "historico";
+	private static final String SCOREBOARD = "scoreboard";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -134,6 +135,9 @@ public class Tasks {
 				case HISTORICO:
 					new HistoryMenu(database, in).show();
 					break;
+				case SCOREBOARD:
+					new Scoreboard(database).show();
+					break;
                 case AJUDA:
                     menuHelp();
                     break;
@@ -175,6 +179,7 @@ public class Tasks {
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
 		System.out.println("- " + HISTORICO + ": Navega pelos jogos guardados na base de dados e revê as jogadas.");
+		System.out.println("- " + SCOREBOARD + ": Mostra o ranking dos jogos anteriores.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
