@@ -1,5 +1,6 @@
 package battleship;
 import org.apache.commons.lang3.time.StopWatch;
+import java.util.List;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,7 @@ public class Tasks {
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
+	private static final String HISTORICO = "historico";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -40,6 +42,8 @@ public class Tasks {
 
 		IFleet myFleet = null;
 		IGame game = null;
+		MoveDatabase database = new MoveDatabase();
+		long gameId = -1;
 		menuHelp();
 
 		System.out.print("> ");
@@ -49,13 +53,19 @@ public class Tasks {
 
 			switch (command) {
 				case GERAFROTA:
+					if (game != null)
+						database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_QUIT);
 					myFleet = Fleet.createRandom();
 					game = new Game(myFleet);
+					gameId = database.startGame();
 					game.printMyBoard(false, true);
 					break;
 				case LEFROTA:
+					if (game != null)
+						database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_QUIT);
 					myFleet = buildFleet(in);
 					game = new Game(myFleet);
+					gameId = database.startGame();
 					game.printMyBoard(false, true);
 					break;
 				case STATUS:
@@ -75,6 +85,8 @@ public class Tasks {
 
                         stopWatch.stop();
 
+                        saveLastMove(database, gameId, game);
+
                         double tempoSegundos = stopWatch.getTime() / 1000.0;
 
                         System.out.printf(
@@ -87,6 +99,7 @@ public class Tasks {
 
                         if (game.getRemainingShips() == 0) {
                             game.over();
+                            database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_FLEET_SUNK);
                             PdfExporter.exportarHistorico(game.getAlienMoves());
                             System.exit(0);
                         }
@@ -96,6 +109,7 @@ public class Tasks {
 					if (game != null) {
 						while (game.getRemainingShips() > 0){
 							game.randomEnemyFire();
+							saveLastMove(database, gameId, game);
 							myFleet.printStatus();
 							game.printMyBoard(true, false);
 							try {
@@ -107,6 +121,7 @@ public class Tasks {
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
+							database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_FLEET_SUNK);
 							PdfExporter.exportarHistorico(game.getAlienMoves());
 							System.exit(0);
 						}
@@ -115,6 +130,9 @@ public class Tasks {
 				case TIROS:
 					if (game != null)
 						game.printMyBoard(true, true);
+					break;
+				case HISTORICO:
+					new HistoryMenu(database, in).show();
 					break;
                 case AJUDA:
                     menuHelp();
@@ -125,7 +143,22 @@ public class Tasks {
 			System.out.print("> ");
 			command = in.next();
 		}
+		if (game != null)
+			database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_QUIT);
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	/**
+	 * Stores in the database the last move of the given game, if there is one.
+	 *
+	 * @param database the database where moves are stored
+	 * @param gameId   id of the game in the database
+	 * @param game     the game being played
+	 */
+	private static void saveLastMove(MoveDatabase database, long gameId, IGame game) {
+		List<IMove> moves = game.getAlienMoves();
+		if (!moves.isEmpty())
+			database.saveMove(gameId, moves.get(moves.size() - 1));
 	}
 
 	/**
@@ -141,6 +174,7 @@ public class Tasks {
 		System.out.println("- " + RAJADA + ": Realiza uma rajada de disparos.");
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
+		System.out.println("- " + HISTORICO + ": Navega pelos jogos guardados na base de dados e revê as jogadas.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
