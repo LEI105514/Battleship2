@@ -1,3 +1,11 @@
+Grupo 6:
+Afonso Teixeira nº105514
+Afonso Carolo nº99917
+Diogo Silva nº129334
+Temóteo Costa nº62015
+
+
+
 # ⚓ Battleship 2.0
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
