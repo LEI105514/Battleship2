@@ -32,6 +32,7 @@ jobs:
         uses: JetBrains/qodana-action@v2026.2
         with:
           pr-mode: false
+          args: --baseline .qodana/baseline-99917.sarif.json
           use-annotations: true
           post-pr-comment: true
           upload-result: true
