@@ -30,9 +30,6 @@ jobs:
         uses: JetBrains/qodana-action@v2026.2
         with:
           pr-mode: false
-          args: |
-            --profile-path /data/project/.qodana/profiles/profile-99917.yaml
-            --disable-sanity
           use-annotations: true
           post-pr-comment: true
           upload-result: true

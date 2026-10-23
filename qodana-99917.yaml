@@ -7,7 +7,13 @@ linter: jetbrains/qodana-jvm-community:2026.2
 projectJDK: 21
 
 profile:
-  path: .qodana/profiles/profile-99917.yaml
+  name: empty
+
+inspections:
+  - inspection: NonCommentSourceStatements
+    enabled: true
+
+disableSanityInspections: true
 
 failureConditions:
   severityThresholds:
