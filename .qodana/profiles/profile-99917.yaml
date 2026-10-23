@@ -1,0 +1,12 @@
+# 99917 - Afonso Carolo
+
+version: "1.0"
+
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: NonCommentSourceStatements
+      enabled: true
+      options:
+        m_limit: 30

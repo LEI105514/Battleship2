@@ -1,0 +1,38 @@
+# 99917 - Afonso Carolo
+
+name: Qodana Long Method Gate 99917
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use LEI-99917 Qodana configuration
+        run: |
+          cp qodana-99917.yaml qodana.yaml
+          cat qodana.yaml
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          pr-mode: false
+          args: --baseline .qodana/baseline-99917.sarif.json
+          use-annotations: true
+          post-pr-comment: true
+          upload-result: true
