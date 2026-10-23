@@ -1,0 +1,31 @@
+# LEI-99917 - Afonso Carolo
+
+name: Checkstyle MethodName Gate 99917
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkstyle MethodName
+        uses: dbelyaev/action-checkstyle@v4.4.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_config: checkstyle-99917.xml
+          reporter: github-pr-check
+          level: error
+          filter_mode: added
+          fail_level: error
