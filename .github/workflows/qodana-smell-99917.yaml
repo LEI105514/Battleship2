@@ -24,7 +24,9 @@ jobs:
           fetch-depth: 0
 
       - name: Use LEI-99917 Qodana configuration
-        run: cp qodana-99917.yaml qodana.yaml
+        run: |
+          cp qodana-99917.yaml qodana.yaml
+          cat qodana.yaml
 
       - name: Qodana Scan
         uses: JetBrains/qodana-action@v2026.2
