@@ -7,11 +7,8 @@ linter: jetbrains/qodana-jvm-community:2026.2
 projectJDK: 21
 
 profile:
-  name: empty
-
-inspections:
-  - inspection: NonCommentSourceStatements
-    enabled: true
+  base:
+    path: .qodana/profiles/profile-99917.yaml
 
 disableSanityInspections: true
 
