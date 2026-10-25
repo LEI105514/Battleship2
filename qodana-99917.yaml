@@ -1,0 +1,23 @@
+# 99917 - Afonso Carolo
+
+version: "1.0"
+
+linter: jetbrains/qodana-jvm-community:2026.2
+
+projectJDK: 21
+
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: NonCommentSourceStatements
+      enabled: true
+      severity: WARNING
+      options:
+        m_limit: 30
+
+disableSanityInspections: true
+
+failureConditions:
+  severityThresholds:
+    any: 0
