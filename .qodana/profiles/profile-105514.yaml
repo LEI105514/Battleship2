@@ -1,0 +1,13 @@
+# 105514 Afonso Teixeira
+name: GodClassProfile
+base:
+  name: empty
+inspections:
+  - inspection: MethodCount
+    enabled: true
+    options:
+      m_limit: 15
+  - inspection: ClassComplexity
+    enabled: true
+    options:
+      m_limit: 47
