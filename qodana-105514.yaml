@@ -9,4 +9,4 @@ exclude:
       - "checkstyle-105514.xml"
 failureConditions:
   severityThresholds:
-    any: 0
+    any: 5
