@@ -1,0 +1,29 @@
+# 105514 Afonso Teixeira
+name: Qodana God Class Gate 105514
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: JetBrains/qodana-action@v2026.2
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          args: --config qodana-105514.yaml
+          use-annotations: true
+          post-pr-comment: true
