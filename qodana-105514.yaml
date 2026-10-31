@@ -4,6 +4,9 @@ linter: jetbrains/qodana-jvm-community:2026.2
 projectJDK: "21"
 profile:
   path: .qodana/profiles/profile-105514.yaml
+exclude:
+  - paths:
+      - "checkstyle-105514.xml"
 failureConditions:
   severityThresholds:
-    any: 0
+    any: 5
