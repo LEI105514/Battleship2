@@ -1,5 +1,5 @@
 # 105514 Afonso Teixeira
-name: Qodana God Class Gate 12345
+name: Qodana God Class Gate 105514
 on:
   pull_request:
   push:
@@ -21,6 +21,8 @@ jobs:
           fetch-depth: 0
 
       - uses: JetBrains/qodana-action@v2026.2
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
           args: --config qodana-12345.yaml
           use-annotations: true
