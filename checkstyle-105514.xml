@@ -6,7 +6,6 @@
     <property name="severity" value="error"/>
     <module name="TreeWalker">
         <module name="TypeName">
-            <!-- Exige PascalCase: começa com maiúscula A-Z, seguido de letras ou números -->
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
             <message key="name.invalidPattern" value="O nome da classe/interface ''{0}'' deve usar PascalCase e respeitar o padrão ''{1}''."/>
         </module>
