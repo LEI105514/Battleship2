@@ -109,4 +109,7 @@ public class Scoreboard {
             this.sunk = sunk;
         }
     }
+
+    public void demoLongParameterList(int a, int b, int c, int d, int e, int f) {
+    }
 }
