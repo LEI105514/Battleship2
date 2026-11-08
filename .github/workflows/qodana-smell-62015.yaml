@@ -1,0 +1,37 @@
+# 62015 - Temóteo da Costa
+
+name: Qodana Long Parameter List Gate 62015
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use LEI-62015 Qodana configuration
+        run: |
+          cp qodana-62015.yaml qodana.yaml
+          cat qodana.yaml
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          pr-mode: false
+          use-annotations: true
+          post-pr-comment: true
+          upload-result: true

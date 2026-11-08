@@ -1,0 +1,12 @@
+# 62015 - Temóteo da Costa
+
+version: "1.0"
+
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: ParametersPerMethod
+      enabled: true
+      options:
+        m_limit: 5

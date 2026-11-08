@@ -1,0 +1,23 @@
+# 62015 - Temóteo da Costa
+
+version: "1.0"
+
+linter: jetbrains/qodana-jvm-community:2026.2
+
+projectJDK: 21
+
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: ParametersPerMethod
+      enabled: true
+      severity: WARNING
+      options:
+        m_limit: 5
+
+disableSanityInspections: true
+
+failureConditions:
+  severityThresholds:
+    any: 0
