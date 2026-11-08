@@ -110,6 +110,4 @@ public class Scoreboard {
         }
     }
 
-    public void demoLongParameterList(int a, int b, int c, int d, int e, int f) {
-    }
 }
