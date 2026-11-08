@@ -18,7 +18,7 @@ public class Scoreboard {
     /** Result stored by the game when the whole enemy fleet was sunk (a win). */
     private static final String WIN_RESULT = "Frota afundada";
 
-    private static final int maxShips = 5;
+    private static final int MAX_SHIPS = 5;
 
     /** Database that holds the games, moves and shots. */
     private final MoveDatabase database;
