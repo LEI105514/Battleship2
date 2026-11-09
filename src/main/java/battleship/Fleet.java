@@ -115,9 +115,9 @@ public class Fleet implements IFleet
 		assert category != null;
 
 		List<IShip> shipsLike = new ArrayList<IShip>();
-		for (IShip s : ships)
-			if (s.getCategory().equals(category))
-				shipsLike.add(s);
+		for (IShip ship : ships)
+			if (ship.getCategory().equals(category))
+				shipsLike.add(ship);
 
 		return shipsLike;
     }
