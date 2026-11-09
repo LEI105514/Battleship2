@@ -59,6 +59,10 @@ public class Scoreboard {
                 .thenComparingInt(r -> r.game.moves()));
 
         // Build the table.
+        printRanking(rows);
+    }
+
+    private static void printRanking(List<Row> rows) {
         String[] headers = {
                 "Pos", "Jogo", "Inicio", "Resultado", "Rajadas", "Tiros certeiros", "Navios afundados"
         };
