@@ -182,4 +182,68 @@ public class PositionTest {
 				"Incorrect string representation: expected '" + expected +
 						"' but got '" + position.toString() + "'");
 	}
+    @Test
+    @DisplayName("Deve criar uma posição a partir de coordenadas clássicas")
+    void constructorClassicCoordinates() {
+        Position pos = new Position('C', 4);
+
+        assertEquals(2, pos.getRow());
+        assertEquals(3, pos.getColumn());
+        assertFalse(pos.isOccupied());
+        assertFalse(pos.isHit());
+    }
+    @Test
+    @DisplayName("Deve gerar posições aleatórias dentro dos limites do tabuleiro")
+    void randomPositionWithinBoard() {
+        for (int i = 0; i < 100; i++) {
+            Position pos = Position.randomPosition();
+
+            assertNotNull(pos);
+            assertTrue(pos.getRow() >= 0);
+            assertTrue(pos.getRow() < Game.BOARD_SIZE);
+            assertTrue(pos.getColumn() >= 0);
+            assertTrue(pos.getColumn() < Game.BOARD_SIZE);
+        }
+    }
+
+    @Test
+    @DisplayName("Deve devolver três posições adjacentes num canto do tabuleiro")
+    void adjacentPositionsAtCorner() {
+        Position corner = new Position(0, 0);
+
+        var adjacent = corner.adjacentPositions();
+
+        assertEquals(3, adjacent.size());
+        assertTrue(adjacent.contains(new Position(0, 1)));
+        assertTrue(adjacent.contains(new Position(1, 0)));
+        assertTrue(adjacent.contains(new Position(1, 1)));
+    }
+
+    @Test
+    @DisplayName("Deve identificar posições que não são adjacentes")
+    void shouldNotBeAdjacentWhenTooFarApart() {
+        Position origem = new Position(2, 2);
+
+        // Distância superior a 1 na linha
+        Position longeNaLinha = new Position(5, 2);
+        assertFalse(origem.isAdjacentTo(longeNaLinha));
+
+        // Distância superior a 1 na coluna
+        Position longeNaColuna = new Position(2, 5);
+        assertFalse(origem.isAdjacentTo(longeNaColuna));
+
+        // Posição adjacente na diagonal
+        Position diagonal = new Position(3, 3);
+        assertTrue(origem.isAdjacentTo(diagonal));
+    }
+    @Test
+    @DisplayName("Deve converter a coluna interna para a coluna clássica")
+    void classicColumnConversion() {
+        Position pos = new Position(2, 3);
+
+        assertEquals(4, pos.getClassicColumn());
+    }
+
+
+
 }
