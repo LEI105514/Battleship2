@@ -17,6 +17,7 @@ public class Scoreboard {
 
     /** Result stored by the game when the whole enemy fleet was sunk (a win). */
     private static final String WIN_RESULT = "Frota afundada";
+    public static final String ONGOING_GAME_LABEL = "(em curso)";
 
     /** Database that holds the games, moves and shots. */
     private final MoveDatabase database;
@@ -59,6 +60,10 @@ public class Scoreboard {
                 .thenComparingInt(r -> r.game.moves()));
 
         // Build the table.
+        printRanking(rows);
+    }
+
+    private static void printRanking(List<Row> rows) {
         String[] headers = {
                 "Pos", "Jogo", "Inicio", "Resultado", "Rajadas", "Tiros certeiros", "Navios afundados"
         };
@@ -68,7 +73,7 @@ public class Scoreboard {
             data[i][0] = String.valueOf(i + 1);
             data[i][1] = String.valueOf(r.game.id());
             data[i][2] = r.game.start();
-            data[i][3] = r.game.result() == null ? "(em curso)" : r.game.result();
+            data[i][3] = r.game.result() == null ? ONGOING_GAME_LABEL : r.game.result();
             data[i][4] = String.valueOf(r.game.moves());
             data[i][5] = String.valueOf(r.hits);
             data[i][6] = String.valueOf(r.sunk);
