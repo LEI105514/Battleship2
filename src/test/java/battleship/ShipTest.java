@@ -294,7 +294,7 @@ public class ShipTest {
     @DisplayName("getPosition e toString")
     void testGetPositionAndToString() {
         assertEquals(new Position(5, 5), ship.getPosition());
-        assertEquals("[Barca NORTH F6]", ship.toString());
+        assertEquals("[Barca " + Compass.NORTH + " F6]", ship.toString());
     }
 
     @Test
