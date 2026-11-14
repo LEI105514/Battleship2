@@ -1,0 +1,341 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > HistoryMenu</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: HistoryMenu (battleship)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HistoryMenu</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/66)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/96)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Scanner;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interactive console menu to browse the games stored in the {@link MoveDatabase}
+&nbsp; * (issue #8). The user first chooses a game and then replays its moves one at a time,
+&nbsp; * seeing the board with the shots fired up to the current move.
+&nbsp; */
+<b class="nc">&nbsp;public class HistoryMenu {</b>
+&nbsp;
+&nbsp;	private static final String BACK = &quot;v&quot;;
+&nbsp;	private static final String NEXT = &quot;s&quot;;
+&nbsp;	private static final String PREVIOUS = &quot;a&quot;;
+&nbsp;	private static final String FIRST = &quot;p&quot;;
+&nbsp;	private static final String LAST = &quot;u&quot;;
+&nbsp;	private static final String ALL = &quot;t&quot;;
+&nbsp;
+&nbsp;	static final char EMPTY_MARKER = &#39;.&#39;;
+&nbsp;	static final char OLD_HIT_MARKER = &#39;*&#39;;
+&nbsp;	static final char OLD_WATER_MARKER = &#39;o&#39;;
+&nbsp;	static final char NEW_HIT_MARKER = &#39;X&#39;;
+&nbsp;	static final char NEW_WATER_MARKER = &#39;O&#39;;
+&nbsp;
+&nbsp;	private final MoveDatabase database;
+&nbsp;	private final Scanner in;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Creates the menu.
+&nbsp;	 *
+&nbsp;	 * @param database the database with the stored games
+&nbsp;	 * @param in       the scanner to read the user commands from
+&nbsp;	 */
+<b class="nc">&nbsp;	public HistoryMenu(MoveDatabase database, Scanner in) {</b>
+<b class="nc">&nbsp;		assert database != null;</b>
+<b class="nc">&nbsp;		assert in != null;</b>
+&nbsp;
+<b class="nc">&nbsp;		this.database = database;</b>
+<b class="nc">&nbsp;		this.in = in;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Shows the list of games until the user goes back to the main menu.
+&nbsp;	 */
+&nbsp;	public void show() {
+&nbsp;		while (true) {
+<b class="nc">&nbsp;			List&lt;MoveDatabase.GameRecord&gt; games = database.listGames();</b>
+<b class="nc">&nbsp;			printGames(games);</b>
+<b class="nc">&nbsp;			if (games.isEmpty())</b>
+&nbsp;				return;
+&nbsp;
+<b class="nc">&nbsp;			System.out.print(&quot;Numero do jogo a ver (&quot; + BACK + &quot; = voltar ao menu): &quot;);</b>
+<b class="nc">&nbsp;			if (!in.hasNext())</b>
+&nbsp;				return;
+<b class="nc">&nbsp;			String choice = in.next().trim().toLowerCase();</b>
+<b class="nc">&nbsp;			if (choice.equals(BACK))</b>
+&nbsp;				return;
+&nbsp;
+<b class="nc">&nbsp;			MoveDatabase.GameRecord game = findGame(games, choice);</b>
+<b class="nc">&nbsp;			if (game == null)</b>
+<b class="nc">&nbsp;				System.out.println(&quot;Jogo inexistente! Escolhe um dos numeros da lista.&quot;);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				showGame(game);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private static MoveDatabase.GameRecord findGame(List&lt;MoveDatabase.GameRecord&gt; games, String choice) {
+&nbsp;		try {
+<b class="nc">&nbsp;			long id = Long.parseLong(choice);</b>
+<b class="nc">&nbsp;			for (MoveDatabase.GameRecord game : games)</b>
+<b class="nc">&nbsp;				if (game.id() == id)</b>
+<b class="nc">&nbsp;					return game;</b>
+&nbsp;		} catch (NumberFormatException e) {
+&nbsp;			// not a number: handled as an unknown game
+&nbsp;		}
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void printGames(List&lt;MoveDatabase.GameRecord&gt; games) {
+<b class="nc">&nbsp;		System.out.println();</b>
+<b class="nc">&nbsp;		System.out.println(&quot;======================= HISTORICO DE JOGOS =======================&quot;);</b>
+<b class="nc">&nbsp;		if (games.isEmpty()) {</b>
+<b class="nc">&nbsp;			System.out.println(&quot;Ainda nao existem jogos guardados.&quot;);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			System.out.printf(&quot; %4s | %-19s | %7s | %s%n&quot;, &quot;Jogo&quot;, &quot;Inicio&quot;, &quot;Jogadas&quot;, &quot;Resultado&quot;);</b>
+<b class="nc">&nbsp;			System.out.println(&quot;------+---------------------+---------+---------------------------&quot;);</b>
+<b class="nc">&nbsp;			for (MoveDatabase.GameRecord game : games)</b>
+<b class="nc">&nbsp;				System.out.printf(&quot; %4d | %-19s | %7d | %s%n&quot;, game.id(), game.start(), game.moves(),</b>
+<b class="nc">&nbsp;						game.result() == null ? &quot;em curso&quot; : game.result());</b>
+&nbsp;		}
+<b class="nc">&nbsp;		System.out.println(&quot;==================================================================&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Replays the moves of a game, letting the user move forward and backward.
+&nbsp;	 */
+&nbsp;	private void showGame(MoveDatabase.GameRecord game) {
+<b class="nc">&nbsp;		List&lt;MoveDatabase.MoveRecord&gt; moves = database.listMoves(game.id());</b>
+<b class="nc">&nbsp;		if (moves.isEmpty()) {</b>
+<b class="nc">&nbsp;			System.out.println(&quot;O jogo &quot; + game.id() + &quot; nao tem jogadas guardadas.&quot;);</b>
+&nbsp;			return;
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		int current = 0;</b>
+<b class="nc">&nbsp;		printMove(game, moves, current);</b>
+&nbsp;		while (true) {
+<b class="nc">&nbsp;			System.out.print(&quot;[&quot; + NEXT + &quot;]eguinte  [&quot; + PREVIOUS + &quot;]nterior  [&quot; + FIRST + &quot;]rimeira  [&quot;</b>
+&nbsp;					+ LAST + &quot;]ltima  [&quot; + ALL + &quot;]odas  [&quot; + BACK + &quot;]oltar: &quot;);
+<b class="nc">&nbsp;			if (!in.hasNext())</b>
+&nbsp;				return;
+<b class="nc">&nbsp;			String command = in.next().trim().toLowerCase();</b>
+<b class="nc">&nbsp;			switch (command) {</b>
+&nbsp;				case NEXT -&gt; {
+<b class="nc">&nbsp;					if (current &lt; moves.size() - 1)</b>
+<b class="nc">&nbsp;						current++;</b>
+&nbsp;					else {
+<b class="nc">&nbsp;						System.out.println(&quot;Ja estas na ultima jogada.&quot;);</b>
+&nbsp;						continue;
+&nbsp;					}
+&nbsp;				}
+&nbsp;				case PREVIOUS -&gt; {
+<b class="nc">&nbsp;					if (current &gt; 0)</b>
+<b class="nc">&nbsp;						current--;</b>
+&nbsp;					else {
+<b class="nc">&nbsp;						System.out.println(&quot;Ja estas na primeira jogada.&quot;);</b>
+&nbsp;						continue;
+&nbsp;					}
+&nbsp;				}
+<b class="nc">&nbsp;				case FIRST -&gt; current = 0;</b>
+<b class="nc">&nbsp;				case LAST -&gt; current = moves.size() - 1;</b>
+&nbsp;				case ALL -&gt; {
+<b class="nc">&nbsp;					printAllMoves(game, moves);</b>
+&nbsp;					continue;
+&nbsp;				}
+&nbsp;				case BACK -&gt; {
+&nbsp;					return;
+&nbsp;				}
+&nbsp;				default -&gt; {
+<b class="nc">&nbsp;					System.out.println(&quot;Comando desconhecido!&quot;);</b>
+&nbsp;					continue;
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			printMove(game, moves, current);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private static String summary(MoveDatabase.MoveRecord move) {
+<b class="nc">&nbsp;		StringBuilder text = new StringBuilder();</b>
+<b class="nc">&nbsp;		text.append(move.valid()).append(&quot; validos, &quot;)</b>
+<b class="nc">&nbsp;				.append(move.missed()).append(&quot; na agua, &quot;)</b>
+<b class="nc">&nbsp;				.append(move.hits()).append(&quot; em navios, &quot;)</b>
+<b class="nc">&nbsp;				.append(move.repeated()).append(&quot; repetidos, &quot;)</b>
+<b class="nc">&nbsp;				.append(move.outside()).append(&quot; exteriores&quot;);</b>
+<b class="nc">&nbsp;		if (!move.sunk().isEmpty())</b>
+<b class="nc">&nbsp;			text.append(&quot; | afundados: &quot;).append(move.sunk());</b>
+<b class="nc">&nbsp;		return text.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void printAllMoves(MoveDatabase.GameRecord game, List&lt;MoveDatabase.MoveRecord&gt; moves) {
+<b class="nc">&nbsp;		System.out.println();</b>
+<b class="nc">&nbsp;		System.out.println(&quot;Jogo &quot; + game.id() + &quot; - todas as jogadas:&quot;);</b>
+<b class="nc">&nbsp;		for (MoveDatabase.MoveRecord move : moves)</b>
+<b class="nc">&nbsp;			System.out.printf(&quot;   Jogada %d: %-12s -&gt; %s%n&quot;, move.number(), move.shots(), summary(move));</b>
+<b class="nc">&nbsp;		System.out.println();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void printMove(MoveDatabase.GameRecord game, List&lt;MoveDatabase.MoveRecord&gt; moves, int index) {
+<b class="nc">&nbsp;		MoveDatabase.MoveRecord move = moves.get(index);</b>
+<b class="nc">&nbsp;		System.out.println();</b>
+<b class="nc">&nbsp;		System.out.printf(&quot;=== Jogo %d | Jogada %d de %d | %s ===%n&quot;, game.id(), index + 1, moves.size(), move.time());</b>
+<b class="nc">&nbsp;		System.out.println(&quot;Tiros: &quot; + move.shots() + &quot; -&gt; &quot; + summary(move));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (move.details().isEmpty()) {</b>
+<b class="nc">&nbsp;			System.out.println(&quot;(jogada guardada sem detalhe dos tiros: tabuleiro indisponivel)&quot;);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			printBoard(buildBoard(moves, index));</b>
+<b class="nc">&nbsp;			System.out.println(&quot;&#39;&quot; + NEW_HIT_MARKER + &quot;&#39;/&#39;&quot; + NEW_WATER_MARKER + &quot;&#39;-&gt; tiro desta jogada (navio/agua), &#39;&quot;</b>
+&nbsp;					+ OLD_HIT_MARKER + &quot;&#39;/&#39;&quot; + OLD_WATER_MARKER + &quot;&#39;-&gt; jogadas anteriores&quot;);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Builds the board with every shot fired up to (and including) the given move.
+&nbsp;	 * Shots of that move are marked differently from the older ones.
+&nbsp;	 *
+&nbsp;	 * @param moves the moves of the game
+&nbsp;	 * @param upTo  index of the current move
+&nbsp;	 * @return the board, indexed by [row][column]
+&nbsp;	 */
+&nbsp;	static char[][] buildBoard(List&lt;MoveDatabase.MoveRecord&gt; moves, int upTo) {
+<b class="nc">&nbsp;		char[][] board = new char[Game.BOARD_SIZE][Game.BOARD_SIZE];</b>
+<b class="nc">&nbsp;		for (char[] row : board)</b>
+<b class="nc">&nbsp;			Arrays.fill(row, EMPTY_MARKER);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt;= upTo; i++) {</b>
+<b class="nc">&nbsp;			boolean current = i == upTo;</b>
+<b class="nc">&nbsp;			for (MoveDatabase.ShotRecord shot : moves.get(i).details()) {</b>
+<b class="nc">&nbsp;				if (shot.outcome().equals(MoveDatabase.SHOT_OUTSIDE) || shot.outcome().equals(MoveDatabase.SHOT_REPEATED))</b>
+&nbsp;					continue;
+<b class="nc">&nbsp;				if (shot.isHit())</b>
+<b class="nc">&nbsp;					board[shot.row()][shot.column()] = current ? NEW_HIT_MARKER : OLD_HIT_MARKER;</b>
+&nbsp;				else
+<b class="nc">&nbsp;					board[shot.row()][shot.column()] = current ? NEW_WATER_MARKER : OLD_WATER_MARKER;</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return board;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void printBoard(char[][] board) {
+<b class="nc">&nbsp;		System.out.print(&quot;    &quot;);</b>
+<b class="nc">&nbsp;		for (int col = 0; col &lt; Game.BOARD_SIZE; col++)</b>
+<b class="nc">&nbsp;			System.out.print(&quot; &quot; + (col + 1));</b>
+<b class="nc">&nbsp;		System.out.println();</b>
+<b class="nc">&nbsp;		System.out.println(&quot;   +&quot; + &quot;--&quot;.repeat(Game.BOARD_SIZE) + &quot;-+&quot;);</b>
+<b class="nc">&nbsp;		for (int row = 0; row &lt; Game.BOARD_SIZE; row++) {</b>
+<b class="nc">&nbsp;			System.out.print(&quot; &quot; + (char) (&#39;A&#39; + row) + &quot; |&quot;);</b>
+<b class="nc">&nbsp;			for (int col = 0; col &lt; Game.BOARD_SIZE; col++)</b>
+<b class="nc">&nbsp;				System.out.print(&quot; &quot; + board[row][col]);</b>
+<b class="nc">&nbsp;			System.out.println(&quot; |&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		System.out.println(&quot;   +&quot; + &quot;--&quot;.repeat(Game.BOARD_SIZE) + &quot;-+&quot;);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-11-11 00:07</div>
+</div>
+</body>
+</html>

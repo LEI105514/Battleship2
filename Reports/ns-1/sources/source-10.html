@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PdfExporter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: PdfExporter (battleship)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PdfExporter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (30/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.5%
+  </span>
+  <span class="absValue">
+    (64/65)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import org.apache.pdfbox.pdmodel.PDDocument;
+&nbsp;import org.apache.pdfbox.pdmodel.PDPage;
+&nbsp;import org.apache.pdfbox.pdmodel.PDPageContentStream;
+&nbsp;import org.apache.pdfbox.pdmodel.font.PDType1Font;
+&nbsp;import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="fc">&nbsp;public class PdfExporter {</b>
+&nbsp;
+&nbsp;    public static void exportarHistorico(List&lt;IMove&gt; historyMoves) {
+<b class="fc">&nbsp;        String filename = &quot;historico_jogadas.pdf&quot;;</b>
+<b class="fc">&nbsp;        ObjectMapper mapper = new ObjectMapper(); // Usado para ler o JSON</b>
+&nbsp;
+<b class="fc">&nbsp;        try (PDDocument document = new PDDocument()) {</b>
+<b class="fc">&nbsp;            PDPage page = new PDPage();</b>
+<b class="fc">&nbsp;            document.addPage(page);</b>
+&nbsp;
+<b class="fc">&nbsp;            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {</b>
+<b class="fc">&nbsp;                contentStream.beginText();</b>
+&nbsp;
+<b class="fc">&nbsp;                PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);</b>
+<b class="fc">&nbsp;                PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);</b>
+&nbsp;
+<b class="fc">&nbsp;                contentStream.setFont(fontBold, 16);</b>
+<b class="fc">&nbsp;                contentStream.newLineAtOffset(50, 750);</b>
+<b class="fc">&nbsp;                contentStream.showText(&quot;Relatorio da Batalha Naval - Historico de Jogadas&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;                contentStream.setFont(fontNormal, 12);</b>
+<b class="fc">&nbsp;                contentStream.newLineAtOffset(0, -30);</b>
+&nbsp;
+<b class="fc">&nbsp;                int yOffset = 720;</b>
+&nbsp;
+<b class="fc">&nbsp;                for (IMove move : historyMoves) {</b>
+&nbsp;                    // Lógica de nova página se o espaço estiver a acabar
+<b class="fc">&nbsp;                    if (yOffset &lt; 100) {</b>
+<b class="fc">&nbsp;                        contentStream.endText();</b>
+&nbsp;                        contentStream.close();
+<b class="fc">&nbsp;                        page = new PDPage();</b>
+<b class="fc">&nbsp;                        document.addPage(page);</b>
+<b class="fc">&nbsp;                        PDPageContentStream newStream = new PDPageContentStream(document, page);</b>
+<b class="fc">&nbsp;                        newStream.beginText();</b>
+<b class="fc">&nbsp;                        newStream.setFont(fontNormal, 12);</b>
+<b class="fc">&nbsp;                        newStream.newLineAtOffset(50, 750);</b>
+<b class="fc">&nbsp;                        yOffset = 750;</b>
+&nbsp;                    }
+&nbsp;
+&nbsp;                    // 1. Extrair e formatar as coordenadas da jogada
+<b class="fc">&nbsp;                    StringBuilder coords = new StringBuilder(&quot;(&quot;);</b>
+<b class="fc">&nbsp;                    List&lt;IPosition&gt; shots = move.getShots();</b>
+<b class="fc">&nbsp;                    for (int i = 0; i &lt; shots.size(); i++) {</b>
+<b class="fc">&nbsp;                        coords.append(shots.get(i).getClassicRow()).append(shots.get(i).getClassicColumn());</b>
+<b class="fc">&nbsp;                        if (i &lt; shots.size() - 1) coords.append(&quot;, &quot;);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    coords.append(&quot;)&quot;);</b>
+&nbsp;
+&nbsp;                    // 2. Receber o JSON da jogada
+<b class="fc">&nbsp;                    String jsonString = move.processEnemyFire(false);</b>
+&nbsp;
+&nbsp;                    // 3. Juntar o número da rajada com as coordenadas
+<b class="fc">&nbsp;                    StringBuilder linhaTexto = new StringBuilder(&quot;Rajada &quot;).append(move.getNumber())</b>
+<b class="fc">&nbsp;                            .append(&quot; &quot;).append(coords).append(&quot;: &quot;);</b>
+&nbsp;
+&nbsp;                    try {
+&nbsp;                        // Converter String JSON para JsonNode para extrair os valores
+<b class="fc">&nbsp;                        JsonNode node = mapper.readTree(jsonString);</b>
+<b class="fc">&nbsp;                        int valid = node.get(&quot;validShots&quot;).asInt();</b>
+<b class="fc">&nbsp;                        int missed = node.get(&quot;missedShots&quot;).asInt();</b>
+<b class="fc">&nbsp;                        int repeated = node.get(&quot;repeatedShots&quot;).asInt();</b>
+&nbsp;
+<b class="fc">&nbsp;                        linhaTexto.append(valid).append(&quot; validos&quot;);</b>
+<b class="fc">&nbsp;                        if (missed &gt; 0) linhaTexto.append(&quot; (&quot;).append(missed).append(&quot; na agua)&quot;);</b>
+<b class="fc">&nbsp;                        if (repeated &gt; 0) linhaTexto.append(&quot;, &quot;).append(repeated).append(&quot; repetidos&quot;);</b>
+&nbsp;
+&nbsp;                        // Analisar os barcos afundados
+<b class="fc">&nbsp;                        JsonNode sunk = node.get(&quot;sunkBoats&quot;);</b>
+<b class="fc">&nbsp;                        if (sunk != null &amp;&amp; !sunk.isEmpty()) {</b>
+<b class="fc">&nbsp;                            linhaTexto.append(&quot; | Afundou: &quot;);</b>
+<b class="fc">&nbsp;                            for (int i = 0; i &lt; sunk.size(); i++) {</b>
+<b class="fc">&nbsp;                                linhaTexto.append(sunk.get(i).get(&quot;count&quot;).asInt()).append(&quot; &quot;).append(sunk.get(i).get(&quot;type&quot;).asText());</b>
+<b class="fc">&nbsp;                                if (i &lt; sunk.size() - 1) linhaTexto.append(&quot;, &quot;);</b>
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;
+&nbsp;                        // Analisar os barcos atingidos (mas não afundados)
+<b class="fc">&nbsp;                        JsonNode hits = node.get(&quot;hitsOnBoats&quot;);</b>
+<b class="fc">&nbsp;                        if (hits != null &amp;&amp; !hits.isEmpty()) {</b>
+<b class="fc">&nbsp;                            linhaTexto.append(&quot; | Atingiu: &quot;);</b>
+<b class="fc">&nbsp;                            for (int i = 0; i &lt; hits.size(); i++) {</b>
+<b class="fc">&nbsp;                                linhaTexto.append(hits.get(i).get(&quot;hits&quot;).asInt()).append(&quot;x &quot;).append(hits.get(i).get(&quot;type&quot;).asText());</b>
+<b class="fc">&nbsp;                                if (i &lt; hits.size() - 1) linhaTexto.append(&quot;, &quot;);</b>
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;
+&nbsp;                    } catch (Exception e) {
+<b class="fc">&nbsp;                        linhaTexto.append(&quot;Erro ao ler dados do formato JSON.&quot;);</b>
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    String linhaFinal = linhaTexto.toString();</b>
+&nbsp;
+&nbsp;                    // Limitar tamanho máximo por precaução para não sair do ecrã do PDF
+<b class="fc">&nbsp;                    if (linhaFinal.length() &gt; 95) {</b>
+<b class="fc">&nbsp;                        linhaFinal = linhaFinal.substring(0, 92) + &quot;...&quot;;</b>
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    contentStream.showText(linhaFinal);</b>
+<b class="fc">&nbsp;                    contentStream.newLineAtOffset(0, -20);</b>
+<b class="fc">&nbsp;                    yOffset -= 20;</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                contentStream.endText();</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            document.save(filename);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;\n[INFO] Relatorio em PDF gerado com sucesso em: &quot; + filename);</b>
+&nbsp;
+&nbsp;        } catch (IOException e) {
+<b class="nc">&nbsp;            System.err.println(&quot;[ERRO] Falha ao gerar o PDF: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-11-11 00:07</div>
+</div>
+</body>
+</html>

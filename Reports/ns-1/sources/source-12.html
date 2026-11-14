@@ -1,0 +1,262 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Scoreboard</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: Scoreboard (battleship)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Scoreboard</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/36)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Scoreboard$Row</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;
+&nbsp;import com.github.freva.asciitable.AsciiTable;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Scoreboard with the ranking of the games played so far.
+&nbsp; *
+&nbsp; * &lt;p&gt;Reads the stored games from the SQLite database ({@link MoveDatabase})
+&nbsp; * and prints a ranking to the console, rendered as an ASCII table using the
+&nbsp; * external library {@code com.github.freva:ascii-table}.&lt;/p&gt;
+&nbsp; */
+&nbsp;public class Scoreboard {
+&nbsp;
+&nbsp;    /** Result stored by the game when the whole enemy fleet was sunk (a win). */
+&nbsp;    private static final String WIN_RESULT = &quot;Frota afundada&quot;;
+&nbsp;
+&nbsp;    /** Database that holds the games, moves and shots. */
+&nbsp;    private final MoveDatabase database;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a scoreboard backed by the given database.
+&nbsp;     *
+&nbsp;     * @param database the database to read the games from
+&nbsp;     */
+<b class="nc">&nbsp;    public Scoreboard(MoveDatabase database) {</b>
+<b class="nc">&nbsp;        this.database = database;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Computes the statistics of every stored game and prints the ranking.
+&nbsp;     */
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        List&lt;MoveDatabase.GameRecord&gt; games = database.listGames();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (games.isEmpty()) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Ainda nao ha jogos guardados para mostrar no scoreboard.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;        // Compute the statistics of each game from its moves.
+<b class="nc">&nbsp;        List&lt;Row&gt; rows = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (MoveDatabase.GameRecord game : games) {</b>
+<b class="nc">&nbsp;            int hits = 0;</b>
+<b class="nc">&nbsp;            int sunk = 0;</b>
+<b class="nc">&nbsp;            for (MoveDatabase.MoveRecord move : database.listMoves(game.id())) {</b>
+<b class="nc">&nbsp;                hits += move.hits();</b>
+<b class="nc">&nbsp;                sunk += countSunk(move.sunk());</b>
+&nbsp;            }
+<b class="nc">&nbsp;            rows.add(new Row(game, hits, sunk));</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Ranking: won games first, then fewer volleys (moves) is better.
+<b class="nc">&nbsp;        rows.sort(Comparator</b>
+<b class="nc">&nbsp;                .comparingInt((Row r) -&gt; WIN_RESULT.equals(r.game.result()) ? 0 : 1)</b>
+<b class="nc">&nbsp;                .thenComparingInt(r -&gt; r.game.moves()));</b>
+&nbsp;
+&nbsp;        // Build the table.
+<b class="nc">&nbsp;        String[] headers = {</b>
+&nbsp;                &quot;Pos&quot;, &quot;Jogo&quot;, &quot;Inicio&quot;, &quot;Resultado&quot;, &quot;Rajadas&quot;, &quot;Tiros certeiros&quot;, &quot;Navios afundados&quot;
+&nbsp;        };
+<b class="nc">&nbsp;        String[][] data = new String[rows.size()][headers.length];</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; rows.size(); i++) {</b>
+<b class="nc">&nbsp;            Row r = rows.get(i);</b>
+<b class="nc">&nbsp;            data[i][0] = String.valueOf(i + 1);</b>
+<b class="nc">&nbsp;            data[i][1] = String.valueOf(r.game.id());</b>
+<b class="nc">&nbsp;            data[i][2] = r.game.start();</b>
+<b class="nc">&nbsp;            data[i][3] = r.game.result() == null ? &quot;(em curso)&quot; : r.game.result();</b>
+<b class="nc">&nbsp;            data[i][4] = String.valueOf(r.game.moves());</b>
+<b class="nc">&nbsp;            data[i][5] = String.valueOf(r.hits);</b>
+<b class="nc">&nbsp;            data[i][6] = String.valueOf(r.sunk);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        System.out.println();</b>
+<b class="nc">&nbsp;        System.out.println(AsciiTable.getTable(headers, data));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Counts the ship types listed in a comma-separated &quot;sunk ships&quot; field.
+&nbsp;     *
+&nbsp;     * @param sunk the comma-separated list of sunk ship types (may be null/blank)
+&nbsp;     * @return the number of ships listed
+&nbsp;     */
+&nbsp;    private int countSunk(String sunk) {
+<b class="nc">&nbsp;        if (sunk == null || sunk.isBlank()) {</b>
+<b class="nc">&nbsp;            return 0;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        int count = 0;</b>
+<b class="nc">&nbsp;        for (String part : sunk.split(&quot;,&quot;)) {</b>
+<b class="nc">&nbsp;            if (!part.isBlank()) {</b>
+<b class="nc">&nbsp;                count++;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return count;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Holds a game together with its computed statistics. */
+&nbsp;    private static final class Row {
+&nbsp;        private final MoveDatabase.GameRecord game;
+&nbsp;        private final int hits;
+&nbsp;        private final int sunk;
+&nbsp;
+<b class="nc">&nbsp;        Row(MoveDatabase.GameRecord game, int hits, int sunk) {</b>
+<b class="nc">&nbsp;            this.game = game;</b>
+<b class="nc">&nbsp;            this.hits = hits;</b>
+<b class="nc">&nbsp;            this.sunk = sunk;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-11-11 00:07</div>
+</div>
+</body>
+</html>
