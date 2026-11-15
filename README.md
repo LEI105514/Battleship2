@@ -54,6 +54,14 @@ Notas:
 - Link do chat completo: https://share.gemini.google/KraDwp2mE6Iy
 
 
+## Integração contínua — testes unitários com GitHub Actions
+
+A bateria de testes unitários é executada automaticamente no GitHub Actions, através do workflow **Java CI with Maven** (`.github/workflows/maven.yml`), criado a partir do modelo «Java with Maven» do GitHub.
+
+- **Quando é executado:** em cada envio (`push`) para qualquer ramo e em cada pedido de integração (*pull request*) para o ramo `main`.
+- **O que faz:** instala o JDK 21, compila o projeto com `mvn -B package` e executa os testes unitários com `mvn -B test`.
+- **Resultado:** cada execução fica registada no separador **Actions** do repositório; se algum teste falhar, a execução termina com erro.
+
 # ⚓ Battleship 2.0
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
