@@ -186,4 +186,54 @@ import java.util.ArrayList;
 			fleet.addShip(ship);
 			assertDoesNotThrow(fleet::printStatus, "Error: printStatus should not throw any exceptions.");
 		}
-	}
+    @Test
+    @DisplayName("Deve devolver apenas os navios afundados")
+    void testGetSunkShips() {
+
+        IShip ship1 = new Barge(Compass.NORTH, new Position(1, 1));
+        IShip ship2 = new Caravel(Compass.NORTH, new Position(4, 4));
+
+        assertTrue(fleet.addShip(ship1));
+        assertTrue(fleet.addShip(ship2));
+
+        // Inicialmente não existem navios afundados
+        assertTrue(fleet.getSunkShips().isEmpty());
+
+        // Afundar a barca
+        ship1.getPositions().get(0).shoot();
+
+        // Verificar os navios afundados
+        List<IShip> sunkShips = fleet.getSunkShips();
+
+        assertEquals(1, sunkShips.size());
+        assertEquals(ship1, sunkShips.get(0));
+    }
+    @Test
+    @DisplayName("Deve imprimir os navios que continuam a flutuar")
+    void testPrintFloatingShips() {
+        IShip ship = new Barge(
+                Compass.NORTH,
+                new Position(1, 1)
+        );
+
+        assertTrue(fleet.addShip(ship));
+
+        assertDoesNotThrow(() -> fleet.printFloatingShips());
+    }
+
+    @Test
+    @DisplayName("Deve imprimir os navios de uma categoria específica")
+    void testPrintShipsByCategory() {
+        IShip ship = new Barge(
+                Compass.NORTH,
+                new Position(1, 1)
+        );
+
+        assertTrue(fleet.addShip(ship));
+
+        assertDoesNotThrow(() ->
+                fleet.printShipsByCategory("Barca")
+        );
+    }
+
+    }
