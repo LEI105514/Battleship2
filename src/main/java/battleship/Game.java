@@ -314,8 +314,7 @@ public class Game implements IGame
 				}
 			} else {
 				// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
-				Scanner singleScanner = new Scanner(token);
-				shots.add(Tasks.readClassicPosition(singleScanner));
+                shots.add(Tasks.readClassicPosition(new Scanner(token)));
 			}
 		}
 
