@@ -35,6 +35,7 @@ public class Tasks {
 	private static final String SIMULA = "simula";
 	private static final String HISTORICO = "historico";
 	private static final String SCOREBOARD = "scoreboard";
+	private static final int SIMULATION_DELAY_MS = 3000;
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -111,7 +112,7 @@ public class Tasks {
 							myFleet.printStatus();
 							game.printMyBoard(true, false);
 							try {
-								Thread.sleep(3000);
+								Thread.sleep(SIMULATION_DELAY_MS);
 							} catch (InterruptedException e) {
 								Thread.currentThread().interrupt(); // Best practice: restore interrupt status
 							}
@@ -197,13 +198,13 @@ public class Tasks {
 		Fleet fleet = new Fleet();
 		int i = 0; // i represents the total of successfully created ships
 		while (i < Fleet.FLEET_SIZE) {
-			IShip s = readShip(in);
-			if (s != null) {
-				boolean success = fleet.addShip(s);
+			IShip ship = readShip(in);
+			if (ship != null) {
+				boolean success = fleet.addShip(ship);
 				if (success)
 					i++;
 				else
-					LOGGER.info("Falha na criacao de {} {} {}", s.getCategory(), s.getBearing(), s.getPosition());
+					LOGGER.info("Falha na criacao de {} {} {}", ship.getCategory(), ship.getBearing(), ship.getPosition());
 			} else {
 				LOGGER.info("Navio desconhecido!");
 			}
@@ -224,8 +225,7 @@ public class Tasks {
 
 		String shipKind = in.next();
 		Position pos = readPosition(in);
-		char c = in.next().charAt(0);
-		Compass bearing = Compass.charToCompass(c);
+        Compass bearing = Compass.charToCompass(in.next().charAt(0));
 		return Ship.buildShip(shipKind, bearing, pos);
 	}
 

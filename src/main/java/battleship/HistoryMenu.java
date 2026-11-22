@@ -197,7 +197,8 @@ public class HistoryMenu {
 		for (int i = 0; i <= upTo; i++) {
 			boolean current = i == upTo;
 			for (MoveDatabase.ShotRecord shot : moves.get(i).details()) {
-				if (shot.outcome().equals(MoveDatabase.SHOT_OUTSIDE) || shot.outcome().equals(MoveDatabase.SHOT_REPEATED))
+				boolean notOnBoard = shot.outcome().equals(MoveDatabase.SHOT_OUTSIDE) || shot.outcome().equals(MoveDatabase.SHOT_REPEATED);
+				if (notOnBoard)
 					continue;
 				if (shot.isHit())
 					board[shot.row()][shot.column()] = current ? NEW_HIT_MARKER : OLD_HIT_MARKER;

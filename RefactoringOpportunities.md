@@ -6,6 +6,11 @@
 | Ship::isInsideBoard | assert this != null é código morto | Safe Delete | 105514 |
 | Ship::buildShip | Switch Statements | Replace Conditional with Polymorphism | 105514 |
 | Game::printBoard | Variáveis com snake_case | Rename | 105514 |
+| MoveDatabase::saveMove | Long Method (o ciclo que prepara o batch dos tiros) | Extract Method | 129334 |
+| Tasks::menu, caso SIMULA | Magic Number (Thread.sleep(3000)) | Introduce Constant | 129334 |
+| Tasks::buildFleet | Nome pouco expressivo (variável s) | Rename | 129334 |
+| Tasks::readShip | Variável temporária desnecessária (c) | Inline Variable | 129334 |
+| HistoryMenu::buildBoard | Condição complexa (tiro exterior ou repetido) | Introduce Variable | 129334 |
 | Game::randomEnemyFire | Long Method (ciclo que gera todas as posições do tabuleiro) | Extract Method | 62015 |
 | Game::readEnemyFire | Magic String (regex "[A-Za-z]") | Introduce Constant | 62015 |
 | Game::readEnemyFire | Variável temporária desnecessária (singleScanner) | Inline Variable | 62015 |
