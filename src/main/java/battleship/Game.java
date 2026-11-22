@@ -70,7 +70,8 @@ public class Game implements IGame
 					int col = shot.getColumn();
 					if (map[row][col] == SHIP_MARKER)
 						map[row][col] = SHOT_SHIP_MARKER;
-					if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
+					boolean isWaterCell = map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER;
+					if (isWaterCell)
 						map[row][col] = SHOT_WATER_MARKER;
 				}
 			}
