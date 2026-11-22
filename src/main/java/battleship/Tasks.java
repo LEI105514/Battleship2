@@ -99,11 +99,8 @@ public class Tasks {
                         game.printMyBoard(true, false);
 
                         if (game.getRemainingShips() == 0) {
-                            game.over();
-                            database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_FLEET_SUNK);
-                            PdfExporter.exportarHistorico(game.getAlienMoves());
-                            System.exit(0);
-                        }
+							endGameFleetSunk(game, database, gameId);
+						}
                     }
                     break;
 				case SIMULA:
@@ -121,10 +118,7 @@ public class Tasks {
 						}
 
 						if (game.getRemainingShips() == 0) {
-							game.over();
-							database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_FLEET_SUNK);
-							PdfExporter.exportarHistorico(game.getAlienMoves());
-							System.exit(0);
+							endGameFleetSunk(game, database, gameId);
 						}
 					}
 					break;
@@ -150,6 +144,13 @@ public class Tasks {
 		if (game != null)
 			database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_QUIT);
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static void endGameFleetSunk(IGame game, MoveDatabase database, long gameId) {
+		game.over();
+		database.finishGame(gameId, game.getAlienMoves().size(), MoveDatabase.RESULT_FLEET_SUNK);
+		PdfExporter.exportarHistorico(game.getAlienMoves());
+		System.exit(0);
 	}
 
 	/**
