@@ -11,3 +11,8 @@
 | Tasks::buildFleet | Nome pouco expressivo (variável s) | Rename | 129334 |
 | Tasks::readShip | Variável temporária desnecessária (c) | Inline Variable | 129334 |
 | HistoryMenu::buildBoard | Condição complexa (tiro exterior ou repetido) | Introduce Variable | 129334 |
+| Game::randomEnemyFire | Long Method (ciclo que gera todas as posições do tabuleiro) | Extract Method | 62015 |
+| Game::readEnemyFire | Magic String (regex "[A-Za-z]") | Introduce Constant | 62015 |
+| Game::readEnemyFire | Variável temporária desnecessária (singleScanner) | Inline Variable | 62015 |
+| Move::processEnemyFire | Mysterious Name (boatHits → hitsOnBoats) | Rename | 62015 |
+| Game::printBoardShots | Expressão complexa (condição de célula de água) | Introduce Variable | 62015 |
