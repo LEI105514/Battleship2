@@ -284,16 +284,7 @@ public class MoveDatabase {
 					moveId = keys.getLong(1);
 				}
 
-				for (int i = 0; i < shots.size(); i++) {
-					IGame.ShotResult result = results.get(i);
-					psShot.setLong(1, moveId);
-					psShot.setInt(2, shots.get(i).getRow());
-					psShot.setInt(3, shots.get(i).getColumn());
-					psShot.setString(4, outcomeOf(result));
-					psShot.setString(5, result.ship() == null ? null : result.ship().getCategory());
-					psShot.addBatch();
-				}
-				psShot.executeBatch();
+				saveshots(shots, results, psShot, moveId);
 				connection.commit();
 			} catch (SQLException e) {
 				connection.rollback();
@@ -302,6 +293,19 @@ public class MoveDatabase {
 		} catch (SQLException e) {
 			LOGGER.error("Erro ao guardar a jogada na base de dados: {}", e.getMessage());
 		}
+	}
+
+	private static void saveshots(List<IPosition> shots, List<IGame.ShotResult> results, PreparedStatement psShot, long moveId) throws SQLException {
+		for (int i = 0; i < shots.size(); i++) {
+			IGame.ShotResult result = results.get(i);
+			psShot.setLong(1, moveId);
+			psShot.setInt(2, shots.get(i).getRow());
+			psShot.setInt(3, shots.get(i).getColumn());
+			psShot.setString(4, outcomeOf(result));
+			psShot.setString(5, result.ship() == null ? null : result.ship().getCategory());
+			psShot.addBatch();
+		}
+		psShot.executeBatch();
 	}
 
 	/**
