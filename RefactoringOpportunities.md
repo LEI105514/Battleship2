@@ -10,6 +10,4 @@
 | Tasks::menu, caso SIMULA | Magic Number (Thread.sleep(3000)) | Introduce Constant | 129334 |
 | Tasks::buildFleet | Nome pouco expressivo (variável s) | Rename | 129334 |
 | Tasks::readShip | Variável temporária desnecessária (c) | Inline Variable | 129334 |
-| HistoryMenu::summary | Feature Envy (só usa dados de MoveDatabase.MoveRecord) | Convert to Instance Method | 129334 |
 | HistoryMenu::buildBoard | Condição complexa (tiro exterior ou repetido) | Introduce Variable | 129334 |
-| MoveDatabase | Dependência de uma classe concreta (HistoryMenu, Scoreboard e Tasks) | Extract Interface | 129334 |
